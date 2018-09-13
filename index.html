@@ -92,6 +92,7 @@
     <div id="verde" class="color verde right" data-color="verde"></div>
     <button id="btnEmpezar" class="btn-start" onclick="empezarJuego()">Empezar a jugar!</button>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
 <script>
     const celeste = document.getElementById('celeste');
     const violeta = document.getElementById('violeta');
@@ -109,13 +110,21 @@
 
         inicializar() {
             this.elegirColor = this.elegirColor.bind(this);
-            btnEmpezar.classList.add('hide');
+            this.showOrHideBtnEmpezar();
             this.nivel = 1;
             this.colores = {
                 celeste,
                 violeta,
                 naranja,
                 verde
+            }
+        }
+
+        showOrHideBtnEmpezar(){
+            if(btnEmpezar.classList.contains('hide')){
+                btnEmpezar.classList.remove('hide')
+            } else {
+                btnEmpezar.classList.add('hide')
             }
         }
 
@@ -172,6 +181,7 @@
         }
 
         agregarEventoClick(){
+            console.log(this)
             this.colores.celeste.addEventListener('click', this.elegirColor);
             this.colores.violeta.addEventListener('click', this.elegirColor);
             this.colores.naranja.addEventListener('click', this.elegirColor);
@@ -179,6 +189,7 @@
         }
 
         eliminarEventosClick(){
+            console.log(this)
             this.colores.verde.removeEventListener('click', this.elegirColor);
             this.colores.naranja.removeEventListener('click', this.elegirColor);
             this.colores.violeta.removeEventListener('click', this.elegirColor);
@@ -200,7 +211,7 @@
                     this.eliminarEventosClick();
                     
                     if (this.nivel === (ULTIMO_NIVEL+1)){
-                        console.log('gano')
+                        this.gano()
                     } else {
                         setTimeout(() => this.siguienteNivel(), 1000);
                     }
@@ -208,9 +219,19 @@
 
             } else {
                 this.eliminarEventosClick();
-                console.log('perdio')
+                this.perdio()
             }
 
+        }
+
+        gano(){
+            swal('Simon dice', 'Enhorabuena, habeis ganado!', 'success')
+                .then(this.inicializar.bind(this))
+        }
+
+        perdio(){
+            swal('Simon dice', 'Lo lamento! habeis perdido :(', 'delete')
+                .then(this.inicializar.bind(this))
         }
 
     }
